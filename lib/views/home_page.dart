@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -12,58 +12,48 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-Future<List<String>> getImagesOfCats() async {
-  final response = await http.get(Uri.parse(
-      'https://api.unsplash.com/search/photos/?query=cats&client_id=2h7UzP5II_EW0RISr8CwogsZiouEnlhKLXy7szQrZXY'));
-  if (response.statusCode == 200) {
-    print(response.body);
-    // Map<String, dynamic> results = jsonDecode(response.body);
-    //
-    // for (int i = 0; i < 2; i++) {
-    //   images.add(results[i]['urls']['small'].toString());
-    // }
-    // return images;
-    return ["", ''];
-  } else {
-    throw Exception('Failed to load cats');
-  }
-}
-
 class _MyHomePageState extends State<MyHomePage> {
-  late Future<List<String>> _cats;
+  final List<String> _cats = <String>[];
 
   @override
   void initState() {
     super.initState();
-    _cats = getImagesOfCats();
+    _getImagesOfCats();
+  }
+
+  Future<void> _getImagesOfCats() async {
+    const String accessKey = '2h7UzP5II_EW0RISr8CwogsZiouEnlhKLXy7szQrZXY';
+    const String query = 'kittens';
+    const String url = 'https://api.unsplash.com/search/photos?query=$query&client_id=$accessKey';
+
+    final Response response = await get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body) as Map<String, dynamic>;
+      final List<dynamic> results = data['results'] as List<dynamic>;
+      for (int i = 0; i < results.length; i++) {
+        final Map<String, dynamic> result = results[i] as Map<String, dynamic>;
+        final Map<String, dynamic> urlResult = result['urls'] as Map<String, dynamic>;
+        _cats.add(urlResult['regular'] as String);
+      }
+      setState(() {
+        //update list
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
-        body: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
-          FutureBuilder(
-              future: getImagesOfCats(),
-              builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-                if (!snapshot.hasData) {
-                  return const CircularProgressIndicator();
-                } else {
-                  final List<String>? list = snapshot.data;
-                  return Container(
-                      child: ListView.builder(
-                          itemCount: list?.length,
-                          itemBuilder: (BuildContext ctx, int index) {
-                            return Image.network(list![index]);
-                          }));
-                }
-              })
-          // ListView.builder(
-          //   itemCount: _cats.length,
-          //   itemBuilder: (BuildContext ctx, int index) {
-          //     return Image.network(_cats[index]);
-          //   }
-          // ),
-        ]));
+        body: _cats.isNotEmpty
+            ? ListView.builder(
+                itemCount: _cats.length,
+                itemBuilder: (BuildContext ctx, int index) {
+                  return ListTile(title: Image.network(_cats[index]));
+                })
+            : const Center(
+                child: CircularProgressIndicator(
+                semanticsLabel: 'Loading photos',
+              )));
   }
 }
