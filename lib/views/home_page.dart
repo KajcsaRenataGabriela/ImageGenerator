@@ -51,9 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (BuildContext ctx, int index) {
                   return ListTile(title: Image.network(_cats[index]));
                 })
-            : const Center(
-                child: CircularProgressIndicator(
-                semanticsLabel: 'Loading photos'
-              )));
+            : const Center(child: CircularProgressIndicator(semanticsLabel: 'Loading photos')));
   }
 }
