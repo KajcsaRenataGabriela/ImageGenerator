@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 })
             : const Center(
                 child: CircularProgressIndicator(
-                semanticsLabel: 'Loading photos',
+                semanticsLabel: 'Loading photos'
               )));
   }
 }
