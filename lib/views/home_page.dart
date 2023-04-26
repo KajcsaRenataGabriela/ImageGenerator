@@ -46,11 +46,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
         body: _cats.isNotEmpty
-            ? ListView.builder(
+            ? GridView.builder(
                 itemCount: _cats.length,
                 itemBuilder: (BuildContext ctx, int index) {
-                  return ListTile(title: Image.network(_cats[index]));
-                })
+                  return GridTile(child: Image.network(_cats[index], fit: BoxFit.cover));
+                },
+                gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.69))
             : const Center(child: CircularProgressIndicator(semanticsLabel: 'Loading photos')));
   }
 }
