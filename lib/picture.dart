@@ -13,9 +13,9 @@ class Picture with _$Picture {
       required int width,
       required int height,
       required String color,
-      @JsonKey(name: 'blue_hash') required String blueHash,
-      required String description,
-      @JsonKey(name: 'alt_description') required String altDescription,
+      @JsonKey(name: 'blue_hash') required String? blueHash,
+      required String? description,
+      @JsonKey(name: 'alt_description') required String? altDescription,
       required Urls urls,
       required Links links,
       required int likes}) = Picture$;

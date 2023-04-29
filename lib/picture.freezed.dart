@@ -31,10 +31,10 @@ mixin _$Picture {
   int get height => throw _privateConstructorUsedError;
   String get color => throw _privateConstructorUsedError;
   @JsonKey(name: 'blue_hash')
-  String get blueHash => throw _privateConstructorUsedError;
-  String get description => throw _privateConstructorUsedError;
+  String? get blueHash => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   @JsonKey(name: 'alt_description')
-  String get altDescription => throw _privateConstructorUsedError;
+  String? get altDescription => throw _privateConstructorUsedError;
   Urls get urls => throw _privateConstructorUsedError;
   Links get links => throw _privateConstructorUsedError;
   int get likes => throw _privateConstructorUsedError;
@@ -56,9 +56,9 @@ abstract class $PictureCopyWith<$Res> {
       int width,
       int height,
       String color,
-      @JsonKey(name: 'blue_hash') String blueHash,
-      String description,
-      @JsonKey(name: 'alt_description') String altDescription,
+      @JsonKey(name: 'blue_hash') String? blueHash,
+      String? description,
+      @JsonKey(name: 'alt_description') String? altDescription,
       Urls urls,
       Links links,
       int likes});
@@ -86,9 +86,9 @@ class _$PictureCopyWithImpl<$Res, $Val extends Picture> implements $PictureCopyW
     Object? width = null,
     Object? height = null,
     Object? color = null,
-    Object? blueHash = null,
-    Object? description = null,
-    Object? altDescription = null,
+    Object? blueHash = freezed,
+    Object? description = freezed,
+    Object? altDescription = freezed,
     Object? urls = null,
     Object? links = null,
     Object? likes = null,
@@ -122,18 +122,18 @@ class _$PictureCopyWithImpl<$Res, $Val extends Picture> implements $PictureCopyW
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as String,
-      blueHash: null == blueHash
+      blueHash: freezed == blueHash
           ? _value.blueHash
           : blueHash // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
+              as String?,
+      description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      altDescription: null == altDescription
+              as String?,
+      altDescription: freezed == altDescription
           ? _value.altDescription
           : altDescription // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       urls: null == urls
           ? _value.urls
           : urls // ignore: cast_nullable_to_non_nullable
@@ -179,9 +179,9 @@ abstract class _$$Picture$CopyWith<$Res> implements $PictureCopyWith<$Res> {
       int width,
       int height,
       String color,
-      @JsonKey(name: 'blue_hash') String blueHash,
-      String description,
-      @JsonKey(name: 'alt_description') String altDescription,
+      @JsonKey(name: 'blue_hash') String? blueHash,
+      String? description,
+      @JsonKey(name: 'alt_description') String? altDescription,
       Urls urls,
       Links links,
       int likes});
@@ -207,9 +207,9 @@ class __$$Picture$CopyWithImpl<$Res> extends _$PictureCopyWithImpl<$Res, _$Pictu
     Object? width = null,
     Object? height = null,
     Object? color = null,
-    Object? blueHash = null,
-    Object? description = null,
-    Object? altDescription = null,
+    Object? blueHash = freezed,
+    Object? description = freezed,
+    Object? altDescription = freezed,
     Object? urls = null,
     Object? links = null,
     Object? likes = null,
@@ -243,18 +243,18 @@ class __$$Picture$CopyWithImpl<$Res> extends _$PictureCopyWithImpl<$Res, _$Pictu
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as String,
-      blueHash: null == blueHash
+      blueHash: freezed == blueHash
           ? _value.blueHash
           : blueHash // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: null == description
+              as String?,
+      description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      altDescription: null == altDescription
+              as String?,
+      altDescription: freezed == altDescription
           ? _value.altDescription
           : altDescription // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       urls: null == urls
           ? _value.urls
           : urls // ignore: cast_nullable_to_non_nullable
@@ -310,12 +310,12 @@ class _$Picture$ implements Picture$ {
   final String color;
   @override
   @JsonKey(name: 'blue_hash')
-  final String blueHash;
+  final String? blueHash;
   @override
-  final String description;
+  final String? description;
   @override
   @JsonKey(name: 'alt_description')
-  final String altDescription;
+  final String? altDescription;
   @override
   final Urls urls;
   @override
@@ -375,9 +375,9 @@ abstract class Picture$ implements Picture {
       required final int width,
       required final int height,
       required final String color,
-      @JsonKey(name: 'blue_hash') required final String blueHash,
-      required final String description,
-      @JsonKey(name: 'alt_description') required final String altDescription,
+      @JsonKey(name: 'blue_hash') required final String? blueHash,
+      required final String? description,
+      @JsonKey(name: 'alt_description') required final String? altDescription,
       required final Urls urls,
       required final Links links,
       required final int likes}) = _$Picture$;
@@ -403,12 +403,12 @@ abstract class Picture$ implements Picture {
   String get color;
   @override
   @JsonKey(name: 'blue_hash')
-  String get blueHash;
+  String? get blueHash;
   @override
-  String get description;
+  String? get description;
   @override
   @JsonKey(name: 'alt_description')
-  String get altDescription;
+  String? get altDescription;
   @override
   Urls get urls;
   @override
