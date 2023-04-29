@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../picture.dart';
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title, required this.apiKey});
+
   final String title;
   final String apiKey;
 
@@ -14,7 +17,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _pictures = <String>[];
+  final List<Picture> _pictures = <Picture>[];
 
   @override
   void initState() {
@@ -33,12 +36,10 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body) as Map<String, dynamic>;
       final List<dynamic> results = data['results'] as List<dynamic>;
-      for (int i = 0; i < results.length; i++) {
-        final Map<String, dynamic> result = results[i] as Map<String, dynamic>;
-        final Map<String, dynamic> urlResult = result['urls'] as Map<String, dynamic>;
-        _pictures.add(urlResult['regular'] as String);
-      }
+
       setState(() {
+        _pictures
+            .addAll(results.cast<Map<dynamic, dynamic>>().map((Map<dynamic, dynamic> json) => Picture.fromJson(json)));
         //update list
       });
     }
@@ -77,8 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: _pictures.isNotEmpty
                   ? GridView.builder(
                       itemCount: _pictures.length,
-                      itemBuilder: (BuildContext ctx, int index) {
-                        return GridTile(child: Image.network(_pictures[index], fit: BoxFit.cover));
+                      itemBuilder: (BuildContext context, int index) {
+                        final Picture picture = _pictures[index];
+                        return GridTile(child: Image.network(picture.urls.regular, fit: BoxFit.cover));
                       },
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.69))
