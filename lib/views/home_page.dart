@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     gradient: LinearGradient(
                                       begin: AlignmentDirectional.bottomCenter,
                                       end: AlignmentDirectional.topCenter,
-                                      colors: [Colors.white54, Colors.transparent],
+                                      colors: <Color>[Colors.white54, Colors.transparent],
                                     ),
                                   ),
                                   child: ListTile(
