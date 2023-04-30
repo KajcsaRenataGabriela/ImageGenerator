@@ -13,9 +13,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cats from Unsplash',
+      title: 'Photos from Unsplash',
       theme: ThemeData(primarySwatch: Colors.pink),
-      home: const MyHomePage(title: 'Cats from Unsplash'),
+      home: const MyHomePage(title: 'Photos from Unsplash'),
     );
   }
 }
