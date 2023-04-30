@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../picture.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.apiKey});
+  const MyHomePage({super.key, required this.title});
 
   final String title;
-  final String apiKey;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final http.Client client = http.Client();
     final Uri uri = Uri.parse('https://api.unsplash.com/search/photos?query=$query&per_page=30&page=$page');
     final http.Response response =
-        await client.get(uri, headers: <String, String>{'Authorization': 'Client-ID ${widget.apiKey}'});
+        await client.get(uri, headers: <String, String>{'Authorization': 'Client-ID ${dotenv.env['API_KEY']}'});
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -48,43 +48,54 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text(widget.title)),
-        body: Column(children: <Widget>[
-          Row(children: <Widget>[
-            Expanded(
-                child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                        hintText: 'Search...',
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () => _searchController.clear(),
-                        ),
-                        prefixIcon: IconButton(
-                          icon: const Icon(Icons.search, color: Colors.pinkAccent),
-                          onPressed: () {},
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        )))),
-            TextButton(
-                onPressed: () {
-                  getRequestedPictures(searchText: _searchController.text, page: 1);
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                child: const Text('Search'))
-          ]),
+      appBar: AppBar(title: Text(widget.title)),
+      body: Column(children: <Widget>[
+        Row(children: <Widget>[
           Expanded(
-              child: _pictures.isNotEmpty
-                  ? GridView.builder(
-                      itemCount: _pictures.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final Picture picture = _pictures[index];
-                        return GridTile(child: Image.network(picture.urls.regular, fit: BoxFit.cover));
-                      },
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.69))
-                  : const Center(child: CircularProgressIndicator(semanticsLabel: 'Loading photos')))
-        ]));
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () => _searchController.clear(),
+                ),
+                prefixIcon: IconButton(
+                  icon: const Icon(Icons.search, color: Colors.pinkAccent),
+                  onPressed: () {},
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              getRequestedPictures(searchText: _searchController.text, page: 1);
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: const Text('Search'),
+          ),
+        ]),
+        Expanded(
+          child: _pictures.isNotEmpty
+              ? GridView.builder(
+                  itemCount: _pictures.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Picture picture = _pictures[index];
+                    return GridTile(
+                      child: Image.network(picture.urls.regular, fit: BoxFit.cover),
+                    );
+                  },
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.69),
+                )
+              : const Center(
+                  child: CircularProgressIndicator(semanticsLabel: 'Loading photos'),
+                ),
+        ),
+      ]),
+    );
   }
 }

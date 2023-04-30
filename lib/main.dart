@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'views/home_page.dart';
 
-void main() {
-  // TODO(renata): put in in env
+void main() async {
+  await dotenv.load();
   const String apiKey = '2h7UzP5II_EW0RISr8CwogsZiouEnlhKLXy7szQrZXY';
   runApp(const MyApp(apiKey: apiKey));
 }
@@ -17,9 +18,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Cats from Unsplash',
         theme: ThemeData(primarySwatch: Colors.pink),
-        home: MyHomePage(
-          title: 'Cats from Unsplash',
-          apiKey: apiKey,
-        ));
+        home: const MyHomePage(title: 'Cats from Unsplash'));
   }
 }
