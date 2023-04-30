@@ -20,6 +20,7 @@ _$Picture$ _$$Picture$FromJson(Map<String, dynamic> json) => _$Picture$(
       urls: Urls.fromJson(json['urls'] as Map<String, dynamic>),
       links: Links.fromJson(json['links'] as Map<String, dynamic>),
       likes: json['likes'] as int,
+      user: User.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$Picture$ToJson(_$Picture$ instance) => <String, dynamic>{
@@ -36,6 +37,7 @@ Map<String, dynamic> _$$Picture$ToJson(_$Picture$ instance) => <String, dynamic>
       'urls': instance.urls,
       'links': instance.links,
       'likes': instance.likes,
+      'user': instance.user,
     };
 
 _$Urls$ _$$Urls$FromJson(Map<String, dynamic> json) => _$Urls$(
@@ -68,12 +70,28 @@ Map<String, dynamic> _$$Links$ToJson(_$Links$ instance) => <String, dynamic>{
 
 _$User$ _$$User$FromJson(Map<String, dynamic> json) => _$User$(
       id: json['id'] as String,
+      updatedAt: DateTime.parse(json['updated_at'] as String),
       username: json['username'] as String,
       name: json['name'] as String,
+      profileImages: UserProfileImages.fromJson(json['profile_image'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$User$ToJson(_$User$ instance) => <String, dynamic>{
       'id': instance.id,
+      'updated_at': instance.updatedAt.toIso8601String(),
       'username': instance.username,
       'name': instance.name,
+      'profile_image': instance.profileImages,
+    };
+
+_$UserProfileImages$ _$$UserProfileImages$FromJson(Map<String, dynamic> json) => _$UserProfileImages$(
+      small: json['small'] as String,
+      medium: json['medium'] as String,
+      large: json['large'] as String,
+    );
+
+Map<String, dynamic> _$$UserProfileImages$ToJson(_$UserProfileImages$ instance) => <String, dynamic>{
+      'small': instance.small,
+      'medium': instance.medium,
+      'large': instance.large,
     };

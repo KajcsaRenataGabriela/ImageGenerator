@@ -129,8 +129,34 @@ class _MyHomePageState extends State<MyHomePage> {
                         itemCount: _pictures.length,
                         itemBuilder: (BuildContext context, int index) {
                           final Picture picture = _pictures[index];
-                          return GridTile(
-                            child: Image.network(picture.urls.regular, fit: BoxFit.cover),
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: <Widget>[
+                              GridTile(
+                                child: Image.network(picture.urls.regular, fit: BoxFit.cover),
+                              ),
+                              Align(
+                                alignment: AlignmentDirectional.bottomEnd,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: AlignmentDirectional.bottomCenter,
+                                      end: AlignmentDirectional.topCenter,
+                                      colors: [Colors.white54, Colors.transparent],
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      picture.user.name,
+                                      style: const TextStyle(
+                                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
+                                    ),
+                                    trailing:
+                                        CircleAvatar(backgroundImage: NetworkImage(picture.user.profileImages.medium)),
+                                  ),
+                                ),
+                              )
+                            ],
                           );
                         },
                         gridDelegate:
