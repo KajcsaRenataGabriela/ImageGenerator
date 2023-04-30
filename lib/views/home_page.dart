@@ -21,6 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final ScrollController _scrollController = ScrollController();
   int _page = 1;
   bool _isLoading = false;
+  bool _hasMore = true;
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final double offset = _scrollController.position.pixels;
     final double maxScrollExtent = _scrollController.position.maxScrollExtent;
 
-    if (!_isLoading && maxScrollExtent - offset < 3 * height) {
+    if (_hasMore && !_isLoading && maxScrollExtent - offset < 3 * height) {
       _page++;
       _getRequestedPictures(page: _page);
     }
@@ -60,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body) as Map<String, dynamic>;
       final List<dynamic> results = data['results'] as List<dynamic>;
+      _hasMore = data.isNotEmpty;
 
       setState(() {
         _pictures
@@ -75,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[
-          if (_isLoading)
+          if (_isLoading && _page > 1)
             const Center(
               child: FittedBox(
                 child: Padding(
@@ -86,55 +88,59 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
         ],
       ),
-      body: Column(children: <Widget>[
-        Row(children: <Widget>[
-          Expanded(
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () => _searchController.clear(),
+      body: _isLoading && _page == 1
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(children: <Widget>[
+              Row(children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Search...',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () => _searchController.clear(),
+                      ),
+                      prefixIcon: IconButton(
+                        icon: const Icon(Icons.search, color: Colors.pinkAccent),
+                        onPressed: () {},
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  ),
                 ),
-                prefixIcon: IconButton(
-                  icon: const Icon(Icons.search, color: Colors.pinkAccent),
-                  onPressed: () {},
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              _page = 1;
-              _getRequestedPictures(searchText: _searchController.text, page: _page);
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
-            child: const Text('Search'),
-          ),
-        ]),
-        Expanded(
-          child: _pictures.isNotEmpty
-              ? GridView.builder(
-                  controller: _scrollController,
-                  itemCount: _pictures.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final Picture picture = _pictures[index];
-                    return GridTile(
-                      child: Image.network(picture.urls.regular, fit: BoxFit.cover),
-                    );
+                TextButton(
+                  onPressed: () {
+                    _page = 1;
+                    _getRequestedPictures(searchText: _searchController.text, page: _page);
+                    FocusManager.instance.primaryFocus?.unfocus();
                   },
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.69),
-                )
-              : const Center(
-                  child: CircularProgressIndicator(semanticsLabel: 'Loading photos'),
+                  child: const Text('Search'),
                 ),
-        ),
-      ]),
+              ]),
+              Expanded(
+                child: _pictures.isNotEmpty
+                    ? GridView.builder(
+                        controller: _scrollController,
+                        itemCount: _pictures.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final Picture picture = _pictures[index];
+                          return GridTile(
+                            child: Image.network(picture.urls.regular, fit: BoxFit.cover),
+                          );
+                        },
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.69),
+                      )
+                    : const Center(
+                        child: CircularProgressIndicator(semanticsLabel: 'Loading photos'),
+                      ),
+              ),
+            ]),
     );
   }
 }
