@@ -18,15 +18,39 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _searchController = TextEditingController();
   final List<Picture> _pictures = <Picture>[];
+  final ScrollController _scrollController = ScrollController();
+  int _page = 1;
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    getRequestedPictures(searchText: 'kittens', page: 1);
+    _getRequestedPictures(searchText: 'kittens', page: _page);
+    _scrollController.addListener(_onScroll);
   }
 
-  Future<void> getRequestedPictures({String? searchText, required int page}) async {
-    _pictures.clear();
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final double height = MediaQuery.of(context).size.height;
+    final double offset = _scrollController.position.pixels;
+    final double maxScrollExtent = _scrollController.position.maxScrollExtent;
+
+    if (!_isLoading && maxScrollExtent - offset < 3 * height) {
+      _page++;
+      _getRequestedPictures(page: _page);
+    }
+  }
+
+  Future<void> _getRequestedPictures({String? searchText, required int page}) async {
+    setState(() => _isLoading = true);
+    if (page == 1) {
+      _pictures.clear();
+    }
     final String query = searchText ?? _searchController.text;
     final http.Client client = http.Client();
     final Uri uri = Uri.parse('https://api.unsplash.com/search/photos?query=$query&per_page=30&page=$page');
@@ -40,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _pictures
             .addAll(results.cast<Map<dynamic, dynamic>>().map((Map<dynamic, dynamic> json) => Picture.fromJson(json)));
-        //update list
+        _isLoading = false;
       });
     }
   }
@@ -48,7 +72,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: <Widget>[
+          if (_isLoading)
+            const Center(
+              child: FittedBox(
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              ),
+            ),
+        ],
+      ),
       body: Column(children: <Widget>[
         Row(children: <Widget>[
           Expanded(
@@ -72,7 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           TextButton(
             onPressed: () {
-              getRequestedPictures(searchText: _searchController.text, page: 1);
+              _page = 1;
+              _getRequestedPictures(searchText: _searchController.text, page: _page);
               FocusManager.instance.primaryFocus?.unfocus();
             },
             child: const Text('Search'),
@@ -81,6 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Expanded(
           child: _pictures.isNotEmpty
               ? GridView.builder(
+                  controller: _scrollController,
                   itemCount: _pictures.length,
                   itemBuilder: (BuildContext context, int index) {
                     final Picture picture = _pictures[index];
