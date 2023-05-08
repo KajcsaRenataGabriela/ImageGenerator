@@ -6,14 +6,36 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart';
+import 'package:image_generator/actions/index.dart';
+import 'package:image_generator/data/unsplash_api.dart';
+import 'package:image_generator/epics/app_epics.dart';
 
 import 'package:image_generator/main.dart';
+import 'package:image_generator/models/index.dart';
+import 'package:image_generator/reducer/app_reducer.dart';
+import 'package:redux/redux.dart';
+import 'package:redux_epics/redux_epics.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await dotenv.load();
+    final String apiKey = dotenv.env['API_KEY']!;
+    final Client client = Client();
+    final UnsplashApi api = UnsplashApi(client, apiKey);
+    final AppEpics epic = AppEpics(api);
+
+    final Store<AppState> store =
+    Store<AppState>(reducer, initialState: const AppState(), middleware: <Middleware<AppState>>[
+      EpicMiddleware<AppState>(epic.call).call,
+    ]);
+
+    store.dispatch(GetImages.start(page: store.state.page, search: store.state.searchTerm));
+
+    await tester.pumpWidget(MyApp(store: store));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
