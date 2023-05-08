@@ -19,7 +19,7 @@ Reducer<AppState> _reducer = combineReducers(<Reducer<AppState>>[
 ]);
 
 AppState _getImagesStart(AppState state, GetImagesStart action) {
-  return state.copyWith(isLoading: true);
+  return state.copyWith(isLoading: true, searchTerm: action.search, images: <Picture>[...state.images]);
 }
 
 AppState _getImagesSuccessful(AppState state, GetImagesSuccessful action) {
