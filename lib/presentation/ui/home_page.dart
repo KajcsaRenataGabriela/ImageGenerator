@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _search() {
     final Store<AppState> store = StoreProvider.of<AppState>(context);
     if (_searchController.text != store.state.searchTerm) {
-      store.dispatch(GetImages.start(page: store.state.page, search: _searchController.text));
+      store.dispatch(GetImages.start(page: 1, search: _searchController.text));
     }
   }
 
