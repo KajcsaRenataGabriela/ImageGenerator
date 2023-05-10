@@ -5,12 +5,13 @@ import 'package:http/http.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 
-import 'actions/index.dart';
-import 'data/unsplash_api.dart';
-import 'epics/app_epics.dart';
-import 'models/index.dart';
-import 'presentation/ui/home_page.dart';
-import 'reducer/app_reducer.dart';
+import 'src/actions/index.dart';
+import 'src/data/unsplash_api.dart';
+import 'src/epics/app_epics.dart';
+import 'src/models/index.dart';
+import 'src/presentation/home_page.dart';
+import 'src/presentation/picure_page.dart';
+import 'src/reducer/app_reducer.dart';
 
 void main() async {
   await dotenv.load();
@@ -41,10 +42,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Photos from Unsplash',
         theme: ThemeData(primarySwatch: Colors.pink),
-        home: MyHomePage(
-          title: 'Photos from Unsplash',
-          store: store,
-        ),
+        routes: <String, WidgetBuilder>{
+          '/': (BuildContext context) => const MyHomePage(title: 'Photos from Unsplash'),
+          '/details': (BuildContext context) => const PictureDetails(),
+        },
       ),
     );
   }

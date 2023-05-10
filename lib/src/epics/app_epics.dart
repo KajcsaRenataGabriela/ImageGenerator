@@ -18,9 +18,11 @@ class AppEpics implements EpicClass<AppState> {
   }
 
   Stream<GetImages> _getImagesStart(Stream<GetImagesStart> actions, EpicStore<AppState> store) {
-    return actions
-        .asyncMap((GetImagesStart action) => _api.getRequestedPictures(page: action.page, searchText: action.search))
-        .map((List<Picture> images) => GetImages.successful(images))
-        .onErrorReturnWith((Object error, StackTrace stacktrace) => GetImages.error(error, stacktrace));
+    return actions.debounceTime(const Duration(milliseconds: 500)).switchMap((GetImagesStart action) {
+      return Stream<void>.value(null)
+          .asyncMap((_) => _api.getRequestedPictures(page: action.page, searchText: action.search))
+          .map((List<Picture> images) => GetImages.successful(images))
+          .onErrorReturnWith((Object error, StackTrace stacktrace) => GetImages.error(error, stacktrace));
+    });
   }
 }

@@ -103,6 +103,7 @@ _$AppState$ _$$AppState$FromJson(Map<String, dynamic> json) => _$AppState$(
       hasMore: json['hasMore'] as bool? ?? true,
       searchTerm: json['searchTerm'] as String? ?? 'flowers',
       page: json['page'] as int? ?? 1,
+      selectedPictureId: json['selectedPictureId'] as String?,
     );
 
 Map<String, dynamic> _$$AppState$ToJson(_$AppState$ instance) => <String, dynamic>{
@@ -111,4 +112,5 @@ Map<String, dynamic> _$$AppState$ToJson(_$AppState$ instance) => <String, dynami
       'hasMore': instance.hasMore,
       'searchTerm': instance.searchTerm,
       'page': instance.page,
+      'selectedPictureId': instance.selectedPictureId,
     };

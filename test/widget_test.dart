@@ -1,21 +1,13 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
-import 'package:image_generator/actions/index.dart';
-import 'package:image_generator/data/unsplash_api.dart';
-import 'package:image_generator/epics/app_epics.dart';
-
 import 'package:image_generator/main.dart';
-import 'package:image_generator/models/index.dart';
-import 'package:image_generator/reducer/app_reducer.dart';
+import 'package:image_generator/src/actions/index.dart';
+import 'package:image_generator/src/data/unsplash_api.dart';
+import 'package:image_generator/src/epics/app_epics.dart';
+import 'package:image_generator/src/models/index.dart';
+import 'package:image_generator/src/reducer/app_reducer.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 

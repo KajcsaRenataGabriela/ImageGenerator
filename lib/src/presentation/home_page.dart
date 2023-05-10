@@ -1,16 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-import '../../actions/index.dart';
-import '../../models/index.dart';
-import '../containers/index.dart';
+import '../actions/index.dart';
+import '../models/index.dart';
+import 'containers/index.dart';
+import 'picure_page.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.store});
+  const MyHomePage({super.key, required this.title});
 
   final String title;
-  final Store<AppState> store;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -47,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final Store<AppState> store = StoreProvider.of<AppState>(context);
     if (_searchController.text != store.state.searchTerm) {
       store.dispatch(GetImages.start(page: 1, search: _searchController.text));
+      _scrollController.jumpTo(0);
     }
   }
 
@@ -114,36 +116,43 @@ class _MyHomePageState extends State<MyHomePage> {
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                             final Picture picture = images[index];
-                            return Stack(
-                              fit: StackFit.expand,
-                              children: <Widget>[
-                                GridTile(
-                                  child: Image.network(
-                                      picture.urls.smallS3.isNotEmpty ? picture.urls.smallS3 : picture.urls.small,
-                                      fit: BoxFit.cover),
-                                ),
-                                Align(
-                                  alignment: AlignmentDirectional.bottomEnd,
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: AlignmentDirectional.bottomCenter,
-                                        end: AlignmentDirectional.topCenter,
-                                        colors: <Color>[Colors.white54, Colors.transparent],
-                                      ),
-                                    ),
-                                    child: ListTile(
-                                      title: Text(
-                                        picture.user.name,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
-                                      ),
-                                      trailing: CircleAvatar(
-                                          backgroundImage: NetworkImage(picture.user.profileImages.medium)),
-                                    ),
+                            return GestureDetector(
+                              onTap: () {
+                                StoreProvider.of<AppState>(context).dispatch(SetSelectedImage(picture.id));
+                                Navigator.pushNamed(context, '/details');
+                              },
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: <Widget>[
+                                  GridTile(
+                                    child: CachedNetworkImage(
+                                        imageUrl:
+                                            picture.urls.smallS3.isNotEmpty ? picture.urls.smallS3 : picture.urls.small,
+                                        fit: BoxFit.cover),
                                   ),
-                                )
-                              ],
+                                  Align(
+                                    alignment: AlignmentDirectional.bottomEnd,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: AlignmentDirectional.bottomCenter,
+                                          end: AlignmentDirectional.topCenter,
+                                          colors: <Color>[Colors.white54, Colors.transparent],
+                                        ),
+                                      ),
+                                      child: ListTile(
+                                        title: Text(
+                                          picture.user.name,
+                                          style: const TextStyle(
+                                              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
+                                        ),
+                                        trailing: CircleAvatar(
+                                            backgroundImage: NetworkImage(picture.user.profileImages.medium)),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             );
                           },
                           childCount: images.length,
