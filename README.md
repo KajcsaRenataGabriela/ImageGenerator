@@ -8,6 +8,13 @@ Perks:
 * api key is hidden
 * keyboard is dismissed after search
 * progress indicator while loading images
+* chosen image resolution in order to load faster (if smaller resolution is provided for picture)
+* description is displayed only if it exists (null exception treated)
+* debounde time
+* used chached network image
+* routing
 
-https://user-images.githubusercontent.com/67558003/235367997-42af7cde-079b-4a2f-b5f5-d58ec0f53e5b.mp4
+https://github.com/KajcsaRenataGabriela/ImageGenerator/assets/67558003/cfdfbc41-3ef8-4bea-9d04-cdbab9e88276
+
+
 
