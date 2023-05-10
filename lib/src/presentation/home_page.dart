@@ -6,7 +6,6 @@ import 'package:redux/redux.dart';
 import '../actions/index.dart';
 import '../models/index.dart';
 import 'containers/index.dart';
-import 'picure_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
