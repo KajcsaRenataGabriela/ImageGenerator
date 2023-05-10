@@ -37,7 +37,7 @@ class PictureDetails extends StatelessWidget {
                 ),
                 child: ListTile(
                   title: Text(
-                    '${picture.likes} Likes',
+                    '${picture.likes} Likes \n${picture.description ?? ''}',
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
                   ),
                   trailing: CircleAvatar(backgroundImage: NetworkImage(picture.user.profileImages.medium)),

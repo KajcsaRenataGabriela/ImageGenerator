@@ -126,8 +126,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                 children: <Widget>[
                                   GridTile(
                                     child: CachedNetworkImage(
-                                        imageUrl:
-                                            picture.urls.smallS3.isNotEmpty ? picture.urls.smallS3 : picture.urls.small,
+                                        imageUrl: picture.urls.smallS3.isNotEmpty
+                                            ? picture.urls.smallS3.isNotEmpty
+                                                ? picture.urls.smallS3
+                                                : picture.urls.small
+                                            : picture.urls.regular,
                                         fit: BoxFit.cover),
                                   ),
                                   Align(
